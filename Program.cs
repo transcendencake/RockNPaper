@@ -22,18 +22,22 @@ namespace RockNPaper
         }
         static void Gameplay(in string[] gamemoves)
         {
-            SHA384 hashCoder = SHA384.Create();
+            HMACSHA384 hmac = new HMACSHA384();
             var rng = RandomNumberGenerator.Create();
             int playerMove = 0;
             int computerMove;
             byte[] key = new byte[16];
 
             rng.GetBytes(key);
-            byte[] hmac = hashCoder.ComputeHash(key);
-            computerMove = key[15] % gamemoves.Length;
+            hmac.Key = key;
+            computerMove = RandomNumberGenerator.GetInt32(gamemoves.Length);
+            byte[] computerMoveBytes = BitConverter.GetBytes(computerMove);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(computerMoveBytes);
+            var hmacRes = hmac.ComputeHash(computerMoveBytes);
 
             Console.WriteLine("HMAC");
-            foreach (var hmacByte in hmac)
+            foreach (var hmacByte in hmacRes)
             {
                 Console.Write("{0:X}", hmacByte);
             }
