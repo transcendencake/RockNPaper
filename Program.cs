@@ -10,7 +10,7 @@ namespace RockNPaper
         static void Main(string[] args)
         {
             int statesSize = args.Length;
-            if(statesSize < 3 || statesSize % 2 == 0)
+            if(statesSize < 3 || statesSize % 2 == 0 || TestRepeat(in args))
             {
                 Console.Write("Invalid input. You need to enter at least 3 (number should be odd) " +
                     "different game moves.\nExample of valid input: Rock Paper Scissors\n");
@@ -90,5 +90,17 @@ namespace RockNPaper
             }
             return true;
         }
+        static bool TestRepeat(in string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                for (int j = i + 1; j < args.Length; j++)
+                {
+                    if (args[i] == args[j]) return true;
+                }
+            }
+            return false;
+        }
     }    
+    
 }
